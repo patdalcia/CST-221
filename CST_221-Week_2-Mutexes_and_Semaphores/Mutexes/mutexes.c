@@ -22,27 +22,32 @@ struct CIRCULAR_BUFFER *buffer = NULL;
 enum direction{THREAD1, THREAD2}; 
 
 
-
+//This function iterates a shared buffer counter by 1 each time its called.
+//It then prints a message to the screen showing the current counter total and
+// Which thread iterated the counter
 int iterateCounter(int d){
-    pthread_mutex_lock(&mutex);
-    if(buffer->counter < MAX){
-        buffer->counter = buffer->counter + 1;
 
-        if(d == 0){
+    pthread_mutex_lock(&mutex);     //Locking mutex
+
+    if(buffer->counter < MAX){ //Tsting if buffer is full 
+
+        buffer->counter = buffer->counter + 1;  //iterating counter
+
+        if(d == 0){ //Thread 1
             printf("Counter iterated by THREAD1. Counter total: %d\n", buffer->counter);
             fflush(stdout);
         }
-        else if(d == 1){
+        else if(d == 1){ //Thread 2
             printf("Counter iterated by THREAD2. Counter total: %d\n", buffer->counter);
             fflush(stdout);
         }
     }
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&mutex); //Unlocking mutex
 return 0;
 }
 
 void *thread_1(){
-    while (1)
+    while (1)   //Loop forever
     {
         iterateCounter(THREAD1);
     }
@@ -50,7 +55,7 @@ void *thread_1(){
 }
 
 void *thread_2(){
-    while (1)
+    while (1)   //Loop forever
     {
         iterateCounter(THREAD2);
     }
