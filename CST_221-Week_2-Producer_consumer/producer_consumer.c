@@ -1,3 +1,9 @@
+/*
+* This program was created by Patrick Garcia for CST-221 on 10/10/2020
+* This program utilizes the sigwait() and pThread_kill() to 
+* provide syncronization across threads.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -6,6 +12,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <time.h>
+
 
 // Constants
 int MAX = 100;
@@ -19,6 +26,9 @@ pid_t otherPid;
 
 // A Signal Set
 sigset_t sigSet;
+
+//Thread declarations
+static pthread_t producer_thread, consumer_thread;
 
 // Shared Circular Buffer
 struct CIRCULAR_BUFFER
@@ -36,33 +46,41 @@ struct CIRCULAR_BUFFER *buffer = NULL;
 void sleepAndWait()
 {
     int nSig;
-
-    printf("Sleeping...........\n");
+    if(pthread_self() == producer_thread){ //Producer is attempting to wake consumer
+        printf("Putting Producer thread to sleep.......\n");
+    }
+    else    //Consumer is attempting to wake producer
+    {
+        printf("Putting Consumer thread to sleep.......\n");
+    }
     // TODO: Sleep until notified to wake up using the sigwait() method
-    FLAG = sigwait(&sigSet, &nSig);
-    printf("Awoken\n");
-    fflush(stdout);
+    sigwait(&sigSet, &nSig);
 }
 
-// This method will signal the Other Process to WAKEUP
+// This method will signal the Other thread to WAKEUP
 void wakeupOther()
 {
-    // TODO: Signal Other Process to wakeup using the kill() method
-    printf("Inside wakeupOther()\n");
-    
-        kill(otherPid, WAKEUP);
+    if(pthread_self() == producer_thread){ //Producer is attempting to wake consumer
+        printf("Waking up the Consumer thread\n");
+        pthread_kill(consumer_thread, SIGUSR1);
+    }
+    else    //Consumer is attempting to wake producer
+    {
+        printf("Waking up the Producer thread\n");
+        pthread_kill(producer_thread, SIGUSR1);
+    }       
 }
 
 // Gets a value from the shared buffer
 int getValue()
 {
-    printf("Inside getValue()\n");
-    // TODO: Get a value from the Circular Buffer and adjust where to read from next
     int value = 0;      
     value = buffer->buffer[0];  //Getting value from buffer
 
+    //Shifting buffer contents down one index, effectively
+    //removing retrived value
     for(int i = 0; i < buffer->upper; i++){
-        buffer->buffer[i] = buffer->buffer[i + 1];
+        buffer->buffer[i] = buffer->buffer[i + 1]; 
     }
 
     buffer->upper = buffer->upper - 1;      //Updating upper index of buffer
@@ -73,19 +91,19 @@ int getValue()
 // Puts a value in the shared buffer
 void putValue(struct CIRCULAR_BUFFER* buffer, int value)
 {
-    printf("Inside putValue()\n");
-    // TODO: Write to the next available position in the Circular Buffer and adjust where to write next
+    // Write to the next available position in the Circular Buffer and adjust where to write next
     buffer->buffer[buffer->upper] = value;
     buffer->upper++;
     
 }
 
+//Print the value of buffer to screen
 void consume(int value){
-    printf("Inside consume()\n");
     printf("Value: %d\n", value);
     fflush(stdout);
 }
 
+//Generates a new item to add to buffer
 int getItem(int item){
     item = item + 1;
     return item;
@@ -96,16 +114,12 @@ int getItem(int item){
 /**
  * Logic to run to the Consumer Process
  **/
-void consumer()
+void *consumer()
 {
-    // Set Signal Set to watch for WAKEUP signal
-    sigemptyset(&sigSet);
-    sigaddset(&sigSet, WAKEUP);
-
     // Run the Consumer Logic
     printf("Running Consumer Process.....\n");
 
-    // TODO: Implement Consumer Logic (see page 129 in book)
+    // Implement Consumer Logic
     int value = 0;
     while(1){                                       /*loop forever*/
         if(buffer->count == 0) sleepAndWait();      /*If empty sleep*/
@@ -121,21 +135,17 @@ void consumer()
 /**
  * Logic to run to the Producer Process
  **/
-void producer()
+void *producer()
 {
     // Buffer value to write
     int item = 0;
 
-    // Set Signal Set to watch for WAKEUP signal
-    sigemptyset(&sigSet);
-    sigaddset(&sigSet, WAKEUP);
-
     // Run the Producer Logic
     printf("Running Producer Process.....\n");
 
-    // TODO: Implement Producer Logic (see page 129 in book)
+    // Implement Producer Logic
     while (1) {                                         /*repeat forever*/
-    item = getItem(item);                                   /*generate next item*/
+    item = getItem(item);                               /*generate next item*/
     if (buffer->count == MAX) sleepAndWait();           /*if buffer is full, go to sleep*/
     putValue(buffer, item);                             /*put item in buffer*/
     buffer->count = buffer->count + 1;                  /*increment count of items in buffer*/
@@ -153,7 +163,11 @@ void producer()
  */
 int main(int argc, char* argv[])
 {
-    pid_t  pid;
+    //Adding wakeup signal to signal set
+    sigemptyset(&sigSet);
+    sigaddset(&sigSet, SIGUSR1);
+    sigaddset(&sigSet, SIGSEGV);
+    pthread_sigmask(SIG_BLOCK, &sigSet, NULL);
 
     // Create shared memory for the Circular Buffer to be shared between the Parent and Child  Processes
     buffer = (struct CIRCULAR_BUFFER*)mmap(0,sizeof(buffer), PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS, -1, 0);
@@ -161,27 +175,13 @@ int main(int argc, char* argv[])
     buffer->lower = 0;
     buffer->upper = 0;
 
-    // Use fork()
-    pid = fork();
-    if (pid == -1)
-    {
-        // Error: If fork() returns -1 then an error happened (for example, number of processes reached the limit).
-        printf("Can't fork, error %d\n", errno);
-        exit(EXIT_FAILURE);
-    }
-    // OK: If fork() returns non zero then the parent process is running else child process is running
-    if (pid == 0)
-    {
-        // Run Producer Process logic as a Child Process
-        otherPid = getppid();
-        producer();
-    }
-    else
-    {
-        // Run Consumer Process logic as a Parent Process
-        otherPid = pid;
-        consumer();
-    }
+    //Creating threads
+    pthread_create(&producer_thread, NULL, producer, NULL);
+    pthread_create(&consumer_thread, NULL, consumer, NULL);
+
+    //destroying threads
+    pthread_join(producer_thread, NULL);
+    pthread_join(consumer_thread,NULL);
 
     // Return OK
     return 0;
