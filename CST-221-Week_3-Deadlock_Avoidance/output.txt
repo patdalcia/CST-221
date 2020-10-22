@@ -1,0 +1,124 @@
+
+LOG: producer pid = 4981
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 1 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 3 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 5 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 7 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 9 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 11 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 13 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 15 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 17 to shared buffer memory
+
+LOG: Process 4981 has been starved.....Sleeping for two seconds
+LOG: Process 4981 has been awoken from sleep
+
+LOG: Process 4981 is acessing the shared buffer resource
+LOG: Producer wrote 19 to shared buffer memory
+
+LOG: consumer pid = 4982
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 2 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 4 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 6 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 8 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 10 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 12 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 14 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 16 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 18 to shared buffer memory
+
+LOG: Process 4982 has been starved.....Sleeping for two seconds
+LOG: Process 4982 has been awoken from sleep
+
+LOG: Process 4982 is acessing the shared buffer resource
+LOG: Consumer wrote 20 to shared buffer memory
